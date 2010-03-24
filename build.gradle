@@ -1,0 +1,44 @@
+def sortedProjects = allprojects.sort{it.name}.collect{it.name}
+
+subprojects {
+    apply id: 'scala'
+    apply id: 'war'
+    apply id: 'jetty'
+    
+    jettyRun {
+        stopKey = name
+        stopPort = 8090 + sortedProjects.indexOf(project.name)
+        httpPort = 8080 + sortedProjects.indexOf(project.name)
+        println("$project.name will start on port: $httpPort")
+    }
+    
+    repositories {
+        mavenCentral()  // http://repo1.maven.org/maven2/
+        mavenRepo(urls: ['http://scala-tools.org/repo-releases/', 'http://maven.reucon.com/public'])
+    }
+
+    scalaVersion="2.7.7"
+    
+    scalalib = "org.scala-lang:scala-library:${scalaVersion}"
+
+    configurations.compile.transitive=true
+    compileScala.encoding = "UTF-8"
+
+    dependencies {
+        // Libraries needed to run the scala tools
+        scalaTools "org.scala-lang:scala-compiler:${scalaVersion}", scalalib
+
+        // Libraries needed for scala api
+        compile 'net.liftweb:lift-core:1.0.3', 'org.apache.derby:derby:10.2.2.0', scalalib
+        providedCompile 'javax.servlet:servlet-api:2.5'
+        
+        testCompile 'junit:junit:4.7'
+    }
+
+
+}
+
+task wrapper(type: Wrapper) { 
+  gradleVersion = '0.9'
+  jarPath = 'wrapper'
+}
