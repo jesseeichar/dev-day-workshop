@@ -4,12 +4,18 @@ subprojects {
     apply id: 'scala'
     apply id: 'war'
     apply id: 'jetty'
+
+        
+    println(sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).scala.asPath)
     
     jettyRun {
         stopKey = name
-        stopPort = 8090 + sortedProjects.indexOf(project.name)
+        stopPort = 8900 + sortedProjects.indexOf(project.name)
         httpPort = 8080 + sortedProjects.indexOf(project.name)
         println("$project.name will start on port: $httpPort")
+        
+        scanTargets = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).scala.srcDirs
+        scanIntervalSeconds = 0
     }
     
     repositories {

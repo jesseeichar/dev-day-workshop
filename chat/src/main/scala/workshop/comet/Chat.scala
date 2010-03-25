@@ -35,6 +35,7 @@ class Chat extends CometActor with CometListenee
       
       def option(any:AnyRef) = if(any == null) None else Some(any)
 
+      def loggedin = theSession.initialHeaders.find( _._1 == "sec-username").isDefined
       def username = theSession.initialHeaders.find( _._1 == "sec-username").map{_._2}.getOrElse("Anonymous")
       def email = theSession.initialHeaders.find( _._1 == "sec-email").map{_._2}
       def roles = {
@@ -46,7 +47,7 @@ class Chat extends CometActor with CometListenee
 //  {if(email.isDefined) Gravatar(email.get)}
   def render =
 <div>
-    <p>Welcome to our little chat</p>
+    <p>Hi {username}</p>
     <p>{ email.map{email => Gravatar(email)}.getOrElse("No gravatar")}</p>
     
     <ul>
@@ -58,7 +59,7 @@ class Chat extends CometActor with CometListenee
         ajaxText("", s => {ChatServer ! username+": "+s; Noop})
       }
       {
-          if(roles.contains("ROLE_ADMIN")) {
+          if(roles.contains("ROLE_SV_ADMIN")) {
               ajaxButton("Clear Log", () => {ChatServer ! Clear; Noop})
           } else {
               ""
