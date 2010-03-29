@@ -1,4 +1,3 @@
-apply plugin: com.camptocamp.gradle.plugin.Camptocamp
 
 def sortedProjects = allprojects.sort{it.name}.collect{it.name}
 
