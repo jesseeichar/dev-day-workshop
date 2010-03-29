@@ -1,0 +1,12 @@
+- Execute following command to download a subproject with a custom camptocamp plugin for laying out camptocamp projects.
+
+  > git submodule add git@github.com:jesseeichar/gradle-extensions.git buildSrc
+
+- Edit build.gradle and add:
+      apply type: com.camptocamp.gradle.plugin.Camptocamp
+
+- add Proxy to the project by executing:
+  > ./gradlew addSecurityProxy
+
+- edit the connection parameters of the CAS so that it accesses the LDAP on geobretagne server:
+

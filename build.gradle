@@ -1,9 +1,11 @@
+apply plugin: com.camptocamp.gradle.plugin.Camptocamp
+
 def sortedProjects = allprojects.sort{it.name}.collect{it.name}
 
 subprojects {
-    apply id: 'scala'
-    apply id: 'war'
-    apply id: 'jetty'
+    apply plugin: 'scala'
+    apply plugin: 'war'
+    apply plugin: 'jetty'
 
         
     println(sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).scala.asPath)
