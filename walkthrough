@@ -2,7 +2,7 @@
   - ./gradlew chat:jettyRun
   - open firefox to http://localhost:8080/chat
   - open another firefox to http://localhost:8080/chat
-  - type in either isntance
+  - type in either instance
 
 - Execute following command to download a subproject with a custom camptocamp plugin for laying out camptocamp projects.
 
@@ -12,7 +12,38 @@
       apply plugin: com.camptocamp.gradle.plugin.Camptocamp
 
 - add Proxy to the project by executing:
-  > ./gradlew addSecurityProxy
+  > ./gradlew addSecurityProxy -q
 
-- edit the connection parameters of the CAS so that it accesses the LDAP on geobretagne server:
+= Edit the connection parameters of the CAS so that it accesses the LDAP on geobretagne server =
+- edit security-proxy/config/filters/global-resource.filter
 
+    defaultTarget.port=8080
+    private.ssl=8443
+    public.ssl=@private.ssl@
+
+    logdir=/tmp/logs
+
+    ldapUrl=ldaps://drebretagne-geobretagne.int.lsn.camptocamp.com:10636/
+    userSearchBaseDN=ou=users,dc=geobretagne,dc=fr
+    authoritiesBaseDN=ou=groups,dc=geobretagne,dc=fr
+    ldapAdminDn=cn=admin,dc=geobretagne,dc=fr
+    ldap.admin.password=gerlsSnFd6SmM
+    
+    cas.securityContext.serviceProperties.service=http://@public_host@:8081/@casContext@/services/j_acegi_cas_security_check
+    cas.securityContext.casProcessingFilterEntryPoint.loginUrl=http://@public_host@:8081/@casContext@/login
+    cas.securityContext.ticketValidator.casServerUrlPrefix=http://@public_host@:8081/@casContext@
+    
+- configure proxy target servers
+  
+  ***** TODO  ****
+
+
+- Run all webapps:
+// sadly I did not get this working in time.  
+  > ./gradlew :security-proxy:core:jettyRunAllWar -q
+  
+
+  > ./gradlew :chat:jettyRun
+  > ./gradlew :security-proxy:cas:jettyRun
+  > ./gradlew :security-proxy:core:jettyRun
+  
