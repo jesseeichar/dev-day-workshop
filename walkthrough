@@ -23,7 +23,7 @@
 
     logdir=/tmp/logs
 
-    ldapUrl=ldaps://drebretagne-geobretagne.int.lsn.camptocamp.com:10636/
+    ldapUrl=ldaps://drebretagne-geobretagne.int.lsn.camptocamp.com:636/
     userSearchBaseDN=ou=users,dc=geobretagne,dc=fr
     authoritiesBaseDN=ou=groups,dc=geobretagne,dc=fr
     ldapAdminDn=cn=admin,dc=geobretagne,dc=fr
@@ -35,24 +35,42 @@
     
 - configure proxy target servers
   security-proxy/config/src/main/filter-webapp/WEB-INF/proxy-servlet.xml:
-  
+      
     -  <property name="targets">
            <map>
                <entry key="google" value="http://www.google.com" />
-               <entry key="c" value="http://localhost:8080" />
+               <entry key="c" value="http://localhost:8080/chat" />
            </map>
       </property>
       
-    
-  ***** TODO  ****
-
 
 - Run all webapps:
-// sadly I did not get this working in time.  
+# This is the goal
   > ./gradlew :security-proxy:core:jettyRunAllWar -q
   
 
   > ./gradlew :chat:jettyRun
-  > ./gradlew :security-proxy:cas:jettyRun
-  > ./gradlew :security-proxy:core:jettyRun
+  > ./gradlew :security-proxy:cas:jettyRunWar
+  > ./gradlew :security-proxy:core:jettyRunWar
   
+  
+
+== install certificate ==
+- kill cas
+ > cd security-proxy/security-scripts
+ > ./create_empty_keystore ~/.trustStore password
+ > javac InstallCert.java
+ > java InstallCert drebretagne-geobretagne.int.lsn.camptocamp.com password
+ > cd ../..
+ > ./gradlew :security-proxy:cas:jettyRunWar -Djavax.net.ssl.trustStore=~/.trustStore -Djavax.net.ssl.trustStorePassword=password
+ 
+
+== secure a URL ==
+- edit security-proxy/config/src/main/filter-webapp/WEB-INF/applicationContext-security.xml 
+   <sec:intercept-url pattern="/c.*" access="ROLE_SV_USER,ROLE_SV_EDITOR,ROLE_SV_REVIEWER,ROLE_SV_ADMIN" />
+- restart core
+ > ./gradlew :security-proxy:core:jettyRunWar
+ 
+== fix 404 ==
+ - edit security-proxy/config/src/main/filter-webapp/WEB-INF/security-proxy.properties:
+ - Replace all https://@public_host@:@public.ssl@ -> http://@public_host@:8081
