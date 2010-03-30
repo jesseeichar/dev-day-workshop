@@ -1,3 +1,9 @@
+- Run Chat app
+  - ./gradlew chat:jettyRun
+  - open firefox to http://localhost:8080/chat
+  - open another firefox to http://localhost:8080/chat
+  - type in either isntance
+
 - Execute following command to download a subproject with a custom camptocamp plugin for laying out camptocamp projects.
 
   > git submodule add git@github.com:jesseeichar/gradle-extensions.git buildSrc
