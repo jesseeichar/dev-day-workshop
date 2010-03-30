@@ -1,7 +1,8 @@
+apply plugin: com.camptocamp.gradle.plugin.Camptocamp
 
 def sortedProjects = allprojects.sort{it.name}.collect{it.name}
 
-subprojects {
+project(':chat') {
     apply plugin: 'scala'
     apply plugin: 'war'
     apply plugin: 'jetty'
@@ -41,7 +42,6 @@ subprojects {
         
         testCompile 'junit:junit:4.7'
     }
-
 
 }
 

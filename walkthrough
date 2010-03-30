@@ -3,7 +3,7 @@
   > git submodule add git@github.com:jesseeichar/gradle-extensions.git buildSrc
 
 - Edit build.gradle and add:
-      apply type: com.camptocamp.gradle.plugin.Camptocamp
+      apply plugin: com.camptocamp.gradle.plugin.Camptocamp
 
 - add Proxy to the project by executing:
   > ./gradlew addSecurityProxy
