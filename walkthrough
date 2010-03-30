@@ -34,7 +34,16 @@
     cas.securityContext.ticketValidator.casServerUrlPrefix=http://@public_host@:8081/@casContext@
     
 - configure proxy target servers
+  security-proxy/config/src/main/filter-webapp/WEB-INF/proxy-servlet.xml:
   
+    -  <property name="targets">
+           <map>
+               <entry key="google" value="http://www.google.com" />
+               <entry key="c" value="http://localhost:8080" />
+           </map>
+      </property>
+      
+    
   ***** TODO  ****
 
 
